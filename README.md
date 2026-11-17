@@ -617,4 +617,114 @@ NODE UPDATE:
   }
 }
 
+The graph worked correctly: the supervisor selected count_and_mean, both tools ran, and reporting used their results to produce the correct answer.
+
+The node updates show how shared state accumulates:
+- Supervisor adds the task classification.
+- Data management adds the inspection result.
+- Analysis adds the calculation result.
+- Reporting reads those fields and adds the answer.
+Let’s verify that the conditional edges actually choose different paths, rather than always running every node.
+
+**Test:** I added two checks to verify that the graph runs only the steps needed for each question. For an order-count request, the supervisor should route to data management and then reporting, skipping analysis. For an average-value request, it should route to analysis and then reporting, skipping data management. No code was changed; these tests check whether the conditional edges follow the supervisor’s classification correctly, rather than always running every node.
+
+
+I added a dashboard tool that creates a local HTML page from the order count and average-value results already calculated by Python. The tool checks that recorded and missing values add up to the total order count. I then extended the supervisor to recognize dashboard requests and added conditional edges so those requests run inspection, analysis, and dashboard generation before reporting. The dashboard node reads the earlier results from shared state, creates the page, and stores its file path back in the state. This is currently a predefined workflow step, not an agent independently designing a dashboard, and we still need to test the new path.
+
+**Debugging:** I added diagnostic prints to show the supervisor’s exact response and the dictionary produced after parsing it. I also asked you to check that "dashboard" is included among the permitted task labels. This helps distinguish whether the model returned an unexpected classification or our validation code rejected a valid dashboard request.
+
+Stage 6 of 6: Add a reviewer and bounded revision
+We’ll start with one reporting agent and one reviewer agent, reusing your existing graph and tools.
+
+The reporting agent writes an explanation from the tool results. The reviewer checks it against those results:
+- Approve: finish.
+- Revise: return feedback to the reporting agent.
+- Two rejected drafts: stop and report failure.
+Both agents use your same local model with different instructions. A second model opinion is not proof of correctness, so we’ll test its behavior afterward.
+
+In Stage 6, I changed reporting from a fixed Python answer template into a model-based reporting agent. It receives the question and tool results and writes a draft. I then added a separate reviewer role that receives the draft and the same evidence and returns a structured decision: approve or revise, with a reason. LangGraph stores that feedback in shared state and uses conditional edges to decide what happens next. Approval ends the workflow; revision sends the feedback back to reporting so it can produce another draft. An attempt counter allows at most two drafts, preventing an endless review loop. Both roles use your same local Qwen model with different instructions, so the reviewer provides an additional check—not a guarantee of correctness.
+
+python supervisor_graph.py
+Your question: How many orders are there, and what is their average recorded value?
+
+RAW SUPERVISOR RESPONSE:
+'{"task": "count_and_mean"}'
+PARSED CLASSIFICATION:
+{
+  "task": "count_and_mean"
+}
+
+NODE UPDATE:
+{
+  "supervisor": {
+    "task": "count_and_mean"
+  }
+}
+
+NODE UPDATE:
+{
+  "data_management": {
+    "inspection": {
+      "row_count": 5,
+      "columns": [
+        "customer_type",
+        "order_id",
+        "order_value_eur"
+      ],
+      "missing_counts": {
+        "customer_type": 0,
+        "order_id": 0,
+        "order_value_eur": 1
+      }
+    }
+  }
+}
+
+NODE UPDATE:
+{
+  "analysis": {
+    "calculation": {
+      "column": "order_value_eur",
+      "mean": 125.0,
+      "values_used": 4,
+      "missing_excluded": 1
+    }
+  }
+}
+
+NODE UPDATE:
+{
+  "reporting": {
+    "answer": "Based on the provided data, there are 5 orders in total. The average recorded value for these orders is 125.0 EUR. The calculation excludes 1 missing value, and the dashboard was not created.",
+    "report_attempts": 1,
+    "status": "draft"
+  }
+}
+
+NODE UPDATE:
+{
+  "reviewer": {
+    "review_verdict": "approve",
+    "review_feedback": "The draft answers the question by stating there are 5 orders and an average value of 125.0 EUR. The numbers (5 orders, 125.0 EUR) are consistent with the tool evidence. The missing value count is correctly identified as 1, and the calculation excludes it as specified. No unsupported claims are made.",
+    "status": "completed"
+  }
+}
+(.venv) minahosseini@Minas-MacBook-Air agent_course_v2 % 
+
+The review mechanism worked: reporting produced a draft, the reviewer approved it, and the graph finished.
+
+**But the reviewer missed an omission:** the draft did not explicitly say that the mean used four recorded values, although we required that. This shows why a model’s approval alone is insufficient.
+**Test whether the reviewer catches an obvious error**
+We’ll deliberately corrupt only the first draft, leaving the actual data and calculations unchanged.
+
+The intended sequence is:
+1. Reporting produces the deliberately incorrect draft.
+2. Reviewer returns revise, identifying the incorrect count and mean.
+3. LangGraph returns to reporting with the feedback.
+4. Reporting generates a second draft from the correct tool evidence.
+5. Reviewer approves it—or the graph stops after the second rejection.
+If the reviewer approves the incorrect draft, that is a failed review test, even if the graph reports completed.
+
+I proposed a controlled test to see whether the reviewer could detect and correct an obvious error. The temporary code replaces only the first report with a deliberately wrong claim of 999 orders and a €999 average, while leaving the actual data and tool results unchanged. I also strengthened the reviewer’s instructions to require the number of recorded values used and missing values excluded. The expected behavior is that the reviewer rejects the incorrect draft, LangGraph sends its feedback back to reporting, and the reporting agent produces a corrected second draft. We have not yet confirmed that this test succeeds; the temporary error code should be removed afterward.
+
 
