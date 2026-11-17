@@ -23,11 +23,8 @@ if a model prints a JSON request, the function has not executed yet. Indeed, the
 
 Use llama-server, rather than llama-cli, because Python needs the HTTP interface.
 
-****Stage 2.** Build tools independently of the model**
+**Stage 2. Build tools independently of the model**
 A tool begins as an ordinary Python function. We’ll verify its behavior first, then let the model request it.
-
-![this is image](https://github.com/MinaHosseinii/Interactive-Multi-Agent-System/blob/main/data_tools.png)
-
 
 INSPECTION:
 {
@@ -53,7 +50,7 @@ CALCULATION:
 }
 
 
-**Build a tool registry**
+**Stage 2. Build a tool registry**
 A tool registry maps permitted names to Python functions. It lets our application turn a structured request into an actual function call.
 
 REQUEST:
@@ -89,4 +86,176 @@ RESULT:
     "message": "Column 'customer_type' is not numeric."
   }
 }
+The executor calculates a valid request and returns an understandable error for an invalid one.
+
+**Stage 3: Let the model request a tool**
+We’ll first make one model decision, then execute its request. Once that works, we’ll add the loop that returns observations to the model.
+
+**Your question: What is the average order value?**
+
+MODEL OUTPUT:
+{"tool": "calculate_mean", "arguments": {"column": "order_value_eur"}}
+
+APPLICATION RESULT:
+{
+  "ok": true,
+  "result": {
+    "column": "order_value_eur",
+    "mean": 125.0,
+    "values_used": 4,
+    "missing_excluded": 1
+  }
+}
+
+| Component | Responsibility |
+|---|---|
+| Model | Request `calculate_mean` for `order_value_eur` |
+| Parser | Convert the returned JSON text into a dictionary |
+| Executor | Validate the tool and arguments |
+| Python function | Calculate €125 from four recorded values |
+
+This is manual tool calling: the model generates ordinary text following our JSON convention. We have not introduced native API tool calls or an autonomous loop yet.
+
+The model chose the right tool, and Python calculated the correct result. Now we’ll return that result to the model and let it decide whether to request another tool or finish.
+**Stage 3: Add the agent loop**
+**question 1:** What is the average order value?
+
+MODEL OUTPUT:
+{"tool": "calculate_mean", "arguments": {"column": "order_value_eur"}}
+
+APPLICATION RESULT:
+{
+  "ok": true,
+  "result": {
+    "column": "order_value_eur",
+    "mean": 125.0,
+    "values_used": 4,
+    "missing_excluded": 1
+  }
+}
+
+
+**Your question 2:** How many orders are there, and what is their average recorded value?
+
+STEP 1 — MODEL:
+{"tool": "calculate_mean", "arguments": {"column": "order_value_eur"}}
+APPLICATION FEEDBACK:
+{
+  "ok": true,
+  "result": {
+    "column": "order_value_eur",
+    "mean": 125.0,
+    "values_used": 4,
+    "missing_excluded": 1
+  }
+}
+
+STEP 2 — MODEL:
+{"tool": "calculate_mean", "arguments": {"column": "order_value_eur"}}
+APPLICATION FEEDBACK:
+{
+  "ok": true,
+  "result": {
+    "column": "order_value_eur",
+    "mean": 125.0,
+    "values_used": 4,
+    "missing_excluded": 1
+  }
+}
+
+STEP 3 — MODEL:
+{"tool": "calculate_mean", "arguments": {"column": "order_value_eur"}}
+APPLICATION FEEDBACK:
+{
+  "ok": true,
+  "result": {
+    "column": "order_value_eur",
+    "mean": 125.0,
+    "values_used": 4,
+    "missing_excluded": 1
+  }
+}
+
+STEP 4 — MODEL:
+{"tool": "calculate_mean", "arguments": {"column": "order_value_eur"}}
+APPLICATION FEEDBACK:
+{
+  "ok": true,
+  "result": {
+    "column": "order_value_eur",
+    "mean": 125.0,
+    "values_used": 4,
+    "missing_excluded": 1
+  }
+}
+
+STEP 5 — MODEL:
+{"tool": "calculate_mean", "arguments": {"column": "order_value_eur"}}
+APPLICATION FEEDBACK:
+{
+  "ok": true,
+  "result": {
+    "column": "order_value_eur",
+    "mean": 125.0,
+    "values_used": 4,
+    "missing_excluded": 1
+  }
+}
+
+APPLICATION RESULT:
+{
+  "ok": false,
+  "reason": "Maximum number of decisions reached.",
+  "observations": [
+    {
+      "ok": true,
+      "result": {
+        "column": "order_value_eur",
+        "mean": 125.0,
+        "values_used": 4,
+        "missing_excluded": 1
+      }
+    },
+    {
+      "ok": true,
+      "result": {
+        "column": "order_value_eur",
+        "mean": 125.0,
+        "values_used": 4,
+        "missing_excluded": 1
+      }
+    },
+    {
+      "ok": true,
+      "result": {
+        "column": "order_value_eur",
+        "mean": 125.0,
+        "values_used": 4,
+        "missing_excluded": 1
+      }
+    },
+    {
+      "ok": true,
+      "result": {
+        "column": "order_value_eur",
+        "mean": 125.0,
+        "values_used": 4,
+        "missing_excluded": 1
+      }
+    },
+    {
+      "ok": true,
+      "result": {
+        "column": "order_value_eur",
+        "mean": 125.0,
+        "values_used": 4,
+        "missing_excluded": 1
+      }
+    }
+  ]
+}
+
+
+
+
 
