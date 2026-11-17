@@ -1,6 +1,6 @@
 # Interactive-Multi-Agent-System
 
-| Stage | What you build | Main challenge |
+| Stage | What We build | Main challenge |
 |---|---|---|
 | 1. Model connection | A small Python client | Distinguishing incomplete output from a usable answer |
 | 2. Tools from scratch | Inspection and statistical functions | Validating arguments and handling missing data |
