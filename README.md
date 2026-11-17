@@ -548,8 +548,73 @@ The average recorded order value is **125.0 EUR**.
 *   **Missing values excluded**: 1
 
 
+I added a second request that sends the tool result back to the local model, together with the user’s question and the model’s original tool request. The ToolMessage includes the matching call ID, so the model can associate the calculation result with its request. I instructed it to explain only the observed result: an average order value of €125, calculated from four recorded values, with one missing value excluded. I also added checks for an empty or truncated explanation. This completes the sequence of requesting a tool, executing it in Python, and returning its result to the model for a final answer.
 
+The local model requested a native tool call, Python executed it, and the model accurately explained the result.
 
+**Stage 5 of 6: Coordinate execution with LangGraph**
+We’ll move the working count-and-mean workflow into a graph
 
+| Concept | Meaning in this example |
+|---|---|
+| **State** | Question, task classification, tool results, and answer |
+| **Node** | A function that performs one workflow step |
+| **Conditional edge** | A rule choosing which node runs next |
+
+LangGraph manages state updates and transitions between nodes. GitHub
+
+For this first graph, the supervisor uses the classification approach that already worked. The worker nodes execute LangChain tools directly. They are not yet independently reasoning specialist agents.
+
+**python -m pip install "langgraph>=1,<2"**
+
+In supervisor_graph.py, I organized the working customer-order workflow into four LangGraph nodes: supervisor, data management, analysis, and reporting. The supervisor asks your local model to classify the question as a count, a mean, both, or unsupported. Conditional edges use that classification to choose which nodes run—for example, a request for both goes through inspection and calculation before reporting. The worker nodes execute the LangChain tools directly, and their results are stored in shared state alongside the question and task. The reporting node constructs the answer from those results, then the graph ends. This gives Python explicit control over execution order and stopping; the worker nodes are not yet independently reasoning agents.
+
+python supervisor_graph.py
+Your question: How many orders are there, and what is their average recorded value?
+
+NODE UPDATE:
+{
+  "supervisor": {
+    "task": "count_and_mean"
+  }
+}
+
+NODE UPDATE:
+{
+  "data_management": {
+    "inspection": {
+      "row_count": 5,
+      "columns": [
+        "customer_type",
+        "order_id",
+        "order_value_eur"
+      ],
+      "missing_counts": {
+        "customer_type": 0,
+        "order_id": 0,
+        "order_value_eur": 1
+      }
+    }
+  }
+}
+
+NODE UPDATE:
+{
+  "analysis": {
+    "calculation": {
+      "column": "order_value_eur",
+      "mean": 125.0,
+      "values_used": 4,
+      "missing_excluded": 1
+    }
+  }
+}
+
+NODE UPDATE:
+{
+  "reporting": {
+    "answer": "There are 5 orders. The average recorded order value is €125.00, using 4 recorded values and excluding 1 missing value(s)."
+  }
+}
 
 
