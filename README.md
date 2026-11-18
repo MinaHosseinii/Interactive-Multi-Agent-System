@@ -1,6 +1,7 @@
 # Interactive-Multi-Agent-System
 
-![this is image](https://github.com/MinaHosseinii/Interactive-Multi-Agent-System/blob/main/mermaid-diagram.png)
+<img src="[https://github.com](https://github.com/MinaHosseinii/Interactive-Multi-Agent-System/blob/main/mermaid-diagram.png)" alt="this is image" width="300">
+
 
 ****Stage 1.** Model Client**
 Python reached your local model, received a completed response, and the model correctly acknowledged that it had no dataset.
