@@ -1,5 +1,7 @@
 # Interactive-Multi-Agent-System
 
+![this is image]
+
 ****Stage 1.** Model Client**
 Python reached your local model, received a completed response, and the model correctly acknowledged that it had no dataset.
 
