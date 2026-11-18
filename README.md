@@ -1,6 +1,6 @@
 # Interactive-Multi-Agent-System
 
-<img src="[https://github.com](https://github.com/MinaHosseinii/Interactive-Multi-Agent-System/blob/main/mermaid-diagram.png)" alt="this is image" width="300">
+<img src="mermaid-diagram.png" alt="Mermaid Diagram" width="300">
 
 
 ****Stage 1.** Model Client**
