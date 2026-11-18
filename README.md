@@ -727,4 +727,282 @@ If the reviewer approves the incorrect draft, that is a failed review test, even
 
 I proposed a controlled test to see whether the reviewer could detect and correct an obvious error. The temporary code replaces only the first report with a deliberately wrong claim of 999 orders and a €999 average, while leaving the actual data and tool results unchanged. I also strengthened the reviewer’s instructions to require the number of recorded values used and missing values excluded. The expected behavior is that the reviewer rejects the incorrect draft, LangGraph sends its feedback back to reporting, and the reporting agent produces a corrected second draft. We have not yet confirmed that this test succeeds; the temporary error code should be removed afterward.
 
+**diagnostic:** I added diagnostic prints inside the reviewer function to show the model’s exact response and the dictionary produced after parsing it. This will reveal why validation failed—for example, a missing reason field, an unexpected verdict, or an incorrect value type. I kept the deliberately wrong draft so we can repeat the same test. This change does not fix the reviewer yet; it makes the failure visible so we can correct the actual problem.
+
+
+I changed the reporting agent to return structured numerical claims instead of free-form text, then added a Python check that compares each claim with the actual tool results. If fields are missing or numbers are wrong—such as 999 orders instead of five—Python rejects the draft and sends precise corrections back to reporting. Only claims that pass these checks proceed to the model reviewer, whose response was simplified to approve or revise. After approval, Python constructs the final written answer from the verified claims. The two-attempt limit remains, so the workflow stops if revision fails. This prevents a mistaken model approval from overriding a numerical mismatch, although the underlying tools still need separate testing.
+
+The correction loop passed this test.
+1. The first draft contained the deliberately incorrect 999 orders and €999 mean.
+2. Python’s checks, not the model, detected both mismatches and returned precise feedback.
+3. Reporting produced the correct second draft.
+4. The numerical checks passed, the model approved, and Python rendered the final answer.
+
+**This completes the six-stage core build: local inference, Python tools, agent-loop experiments, LangChain and native tool calling, LangGraph routing, and bounded review with numerical validation.**
+
+The demonstrated lesson: model feedback can help revision, but enforceable Python checks prevented incorrect numbers from being accepted. This successful example does not yet establish reliability across other questions or datasets.
+
+****reliablity****
+Make it reliable by checking each layer independently. Your latest safeguard proves that a report matches the tool results—but a wrong tool or a buggy calculation could still produce the wrong answer.
+
+For your current application, I would prioritize these checks:
+
+| Layer | What to verify | Example failure |
+|---|---|---|
+| **Request understanding** | Supervisor chose the correct task | User asks for a count; model selects a mean |
+| **Tool selection** | Correct function and column were used | Mean calculated for the wrong numeric column |
+| **Calculation** | Python functions match independently known answers | Missing values incorrectly treated as zero |
+| **Data identity** | Every component uses the intended dataset | Dashboard uses original data after cleaning |
+| **Reporting** | Required facts match tool evidence | Report says €999 instead of €125 |
+| **Execution** | Failures stop safely and retries are bounded | Repeated calls or endless revisions |
+
+**First**, test the Python tools without any model. Use small datasets whose answers you can calculate yourself. Include missing values, zero values, negative values, text columns, unknown columns, and columns where every value is missing. Your current €125 example is one test—not enough to establish general correctness.
+
+**Second**, measure the model’s decisions separately. Create a small collection of questions with expected classifications, including paraphrases and unsupported requests:
+Question	Expected classification
+“How many orders are there?”	count
+“What is the average recorded order value?”	mean
+“Give me the order count and average value.”	count_and_mean
+“Create an order dashboard.”	dashboard
+“Predict next month’s sales.”	unsupported
+
+
+Record both classification accuracy and complete-task success. Agent evaluation should examine intermediate tool choices as well as final results. langchain-ai/langsmith-cookbook · GitHub
+
+**Third**, keep important guarantees in Python. Continue enforcing permitted tools, argument schemas, required results, numerical consistency, and attempt limits. If validation fails, return a clear failure or ask for clarification. Never convert an invalid response into success just to keep the workflow moving.
+
+**Fourth**, test failures deliberately. You already tested a wrong first draft. Also test an always-wrong draft: the graph must stop after two rejections. Test missing report fields, invalid reviewer JSON, unavailable server connections, and unsupported questions. Test individual nodes and the complete graph; LangGraph supports both approaches. GitHub
+
+**Finally**, simplify where the model adds no value. In your current version, asking the model to copy four numbers into JSON creates another opportunity for error. For a numerical report, Python can construct the verified answer directly. Use the model where interpretation is useful, and treat a reviewer model as an additional opinion rather than the authority on correctness.
+
+The next practical step is a local automated test suite—not another agent. It should give you evidence that a code or prompt change improves behavior without breaking cases that previously worked. All of this can run locally without paid APIs.
+
+1. In the step before date validation, I extended your existing data_tools.py with validate_order_keys(rows). It checks the combined key (order_id, line_id), allowing different product lines within the same order while identifying invalid IDs, identical duplicate records, and conflicting records with the same key but different contents. The function reports problems without deleting or changing data. I also added eight automated tests in test_data_quality.py to verify those cases and confirm that the source remains unchanged. All eight tests passed on your Mac; the function has not yet been connected to the agent.
+
+2. I added date validation to data_tools.py using an explicit rule: accept YYYY-MM-DD and DD.MM.YYYY, but reject other formats rather than guess their meaning. The function distinguishes valid dates, missing values, missing fields, incorrect types, and impossible dates such as February 30. It proposes an ISO-formatted date for accepted values without changing the source records. I also provided nine tests covering those cases, leap years, and source preservation. These extend your eight ID tests to 17 tests, but we have not yet seen the date-test results from your Mac.
+
+   (.venv) minahosseini@Minas-MacBook-Air agent_course_v2 % python -m unittest test_data_quality -v
+test_day_month_year_date (test_data_quality.TestOrderDates.test_day_month_year_date) ... ok
+test_impossible_date (test_data_quality.TestOrderDates.test_impossible_date) ... ok
+test_iso_date (test_data_quality.TestOrderDates.test_iso_date) ... ok
+test_leap_year (test_data_quality.TestOrderDates.test_leap_year) ... ok
+test_missing_field (test_data_quality.TestOrderDates.test_missing_field) ... ok
+test_missing_values (test_data_quality.TestOrderDates.test_missing_values) ... ok
+test_numeric_value_rejected (test_data_quality.TestOrderDates.test_numeric_value_rejected) ... ok
+test_slash_format_is_not_guessed (test_data_quality.TestOrderDates.test_slash_format_is_not_guessed) ... ok
+test_source_data_preserved (test_data_quality.TestOrderDates.test_source_data_preserved) ... ok
+test_conflicting_quantity_is_detected (test_data_quality.TestOrderKeys.test_conflicting_quantity_is_detected) ... ok
+test_different_lines_in_same_order_are_valid (test_data_quality.TestOrderKeys.test_different_lines_in_same_order_are_valid) ... ok
+test_empty_dataset (test_data_quality.TestOrderKeys.test_empty_dataset) ... ok
+test_empty_or_padded_order_ids_are_rejected (test_data_quality.TestOrderKeys.test_empty_or_padded_order_ids_are_rejected) ... ok
+test_exact_duplicate_is_detected (test_data_quality.TestOrderKeys.test_exact_duplicate_is_detected) ... ok
+test_invalid_line_ids_are_rejected (test_data_quality.TestOrderKeys.test_invalid_line_ids_are_rejected) ... ok
+test_missing_order_id_is_detected (test_data_quality.TestOrderKeys.test_missing_order_id_is_detected) ... ok
+test_source_data_is_preserved (test_data_quality.TestOrderKeys.test_source_data_is_preserved) ... ok
+
+----------------------------------------------------------------------
+Ran 17 tests in 0.003s
+
+OK
+
+3.We added a deduplication function that removes exact duplicate order lines, keeps conflicting records and invalid IDs for review, and preserves the original data. It also records which rows were removed and which copies were retained. We added seven tests covering these rules, including checking that running the function twice makes no further changes. These new tests still need to be run.
+
+4. We added a numeric validator that distinguishes valid numbers from missing values, text, booleans, NaN, and infinity without changing the data. We also added six tests to check these cases and source preservation. This prepares the data for reliable correlation analysis; the new tests still need to be run.
+Your numeric validator correctly handled the tested cases: ordinary numbers, missing values, text, booleans, NaN, and infinity, while preserving the source data.
+
+Our policy is:
+- Keep a row when both values are valid numbers.
+- Exclude a row if either value is missing, and record why.
+- Reject the preparation if a field is absent or contains invalid data. We won’t silently discard data-quality problems.
+
+We added a function that prepares two numeric columns for correlation while keeping values from the same row together. It excludes pairs with missing values and records why, but blocks analysis if it finds invalid data or absent fields. We also added seven tests for alignment, exclusions, invalid inputs, and source preservation. These new tests still need to be run.
+
+We added a function to calculate Pearson, Spearman, or Kendall correlation using SciPy. It reuses our validated pairs, records missing-value exclusions, and rejects invalid data, constant columns, fewer than three complete pairs, or numerical problems. We also added ten tests using known relationships to check the calculations and source preservation. These tests still need to be run; p-values and hypothesis testing come later.
+
+**Also, returning {"ok": False} does not automatically stop your entire agent workflow. When we connect these tools to LangGraph, we must explicitly make the graph check that flag and route to an error or clarification response instead of continuing with the analysis.**
+
+python demo_reliability.py
+
+--- Valid data ---
+ANALYSIS SUCCEEDED:
+{
+  "method": "pearson",
+  "x_column": "x",
+  "y_column": "y",
+  "pairs_used": 3,
+  "included_rows": [
+    1,
+    2,
+    3
+  ],
+  "excluded_rows": [],
+  "ok": true,
+  "coefficient": 0.9999999999999998
+}
+
+--- One missing value ---
+ANALYSIS SUCCEEDED:
+{
+  "method": "pearson",
+  "x_column": "x",
+  "y_column": "y",
+  "pairs_used": 3,
+  "included_rows": [
+    1,
+    3,
+    4
+  ],
+  "excluded_rows": [
+    {
+      "row": 2,
+      "reason": "missing_value",
+      "columns": [
+        "y"
+      ]
+    }
+  ],
+  "ok": true,
+  "coefficient": 1.0
+}
+
+--- Text inside a numeric column ---
+ANALYSIS BLOCKED:
+{
+  "ok": false,
+  "error": "Invalid data must be resolved before analysis.",
+  "invalid_values": [
+    {
+      "row": 2,
+      "column": "y",
+      "reason": "not_numeric"
+    }
+  ]
+}
+
+--- Constant column ---
+ANALYSIS BLOCKED:
+{
+  "method": "pearson",
+  "x_column": "x",
+  "y_column": "y",
+  "pairs_used": 3,
+  "included_rows": [
+    1,
+    2,
+    3
+  ],
+  "excluded_rows": [],
+  "ok": false,
+  "reason": "constant_column"
+}
+
+--- Unknown method ---
+REQUEST REJECTED: Method must be 'pearson', 'spearman', or 'kendall'.
+
+We created demo_reliability.py to demonstrate five situations: valid data, missing values, invalid text, a constant column, and an unknown method. It shows when analysis succeeds, when it is blocked with a reason, and how an exception is caught so the program can continue. This demonstrates how your application handles problems outside the automated tests.
+
+All five cases behaved as intended:
+- Valid data: correlation succeeded. 0.9999999999999998 is effectively 1.0; the tiny difference comes from floating-point arithmetic.
+- Missing value: row 2 was excluded and recorded; the remaining three pairs were analysed.
+- Text value: analysis was blocked, identifying row 2 and column y.
+- Constant column: analysis was blocked because correlation is undefined without variation.
+- Unknown method: the exception was caught and displayed without an uncontrolled crash.
+Your checks now demonstrate both successful calculations and controlled rejection. Next, we’ll connect this behaviour to LangGraph so a failed tool result stops the analysis path and produces a clear explanation.
+
+Your program handled all five situations correctly: it calculated correlation for valid data, excluded and recorded the missing pair, blocked text values and constant columns, and caught the unknown-method error without crashing. The value 0.9999999999999998 is effectively 1.0—the small difference is normal floating-point rounding. These results came from Python checks and SciPy; the LLM was not involved.
+
+python demo_reliability.py
+
+--- Valid data ---
+ANALYSIS SUCCEEDED:
+{
+  "method": "pearson",
+  "x_column": "x",
+  "y_column": "y",
+  "pairs_used": 3,
+  "included_rows": [
+    1,
+    2,
+    3
+  ],
+  "excluded_rows": [],
+  "ok": true,
+  "coefficient": 0.9999999999999998
+}
+
+--- One missing value ---
+ANALYSIS SUCCEEDED:
+{
+  "method": "pearson",
+  "x_column": "x",
+  "y_column": "y",
+  "pairs_used": 3,
+  "included_rows": [
+    1,
+    3,
+    4
+  ],
+  "excluded_rows": [
+    {
+      "row": 2,
+      "reason": "missing_value",
+      "columns": [
+        "y"
+      ]
+    }
+  ],
+  "ok": true,
+  "coefficient": 1.0
+}
+
+--- Text inside a numeric column ---
+ANALYSIS BLOCKED:
+{
+  "ok": false,
+  "error": "Invalid data must be resolved before analysis.",
+  "invalid_values": [
+    {
+      "row": 2,
+      "column": "y",
+      "reason": "not_numeric"
+    }
+  ]
+}
+
+--- Constant column ---
+ANALYSIS BLOCKED:
+{
+  "method": "pearson",
+  "x_column": "x",
+  "y_column": "y",
+  "pairs_used": 3,
+  "included_rows": [
+    1,
+    2,
+    3
+  ],
+  "excluded_rows": [],
+  "ok": false,
+  "reason": "constant_column"
+}
+
+--- Unknown method ---
+REQUEST REJECTED: Method must be 'pearson', 'spearman', or 'kendall'.
+
+
+**Now we’ll test workflow reliability:** a failed calculation must never reach the successful-reporting node.
+
+We’ll create a small graph in your existing folder first. Once verified, we can apply the same routing to supervisor_graph.py.
+
+A conditional edge chooses the next node using the graph’s state—in this case, whether the tool returned ok: True
+
+**These are integration tests: **
+they check that your calculation function and LangGraph routing work together, including which nodes actually execute.
+
+We connected your correlation function to a small LangGraph workflow. After calculation, a conditional edge checks the result: successful calculations go to reporting, while failed calculations go to a blocked-response node. We also added four integration tests to verify those routes, exception handling, and source preservation. All 51 tests passed; this protection is verified in the small graph but has not yet been added to your main supervisor graph.
+
+
+
+
+
 
