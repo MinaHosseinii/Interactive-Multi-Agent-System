@@ -1,0 +1,93 @@
+{
+  "total": 12,
+  "passed": 9,
+  "wrong": 2,
+  "errors": 1,
+  "accuracy_on_these_cases": 0.75,
+  "results": [
+    {
+      "question": "How many orders are there?",
+      "expected": "count",
+      "actual": "count",
+      "outcome": "PASS",
+      "error": null
+    },
+    {
+      "question": "Tell me the total number of orders.",
+      "expected": "count",
+      "actual": "count",
+      "outcome": "PASS",
+      "error": null
+    },
+    {
+      "question": "What is the average recorded order value?",
+      "expected": "mean",
+      "actual": "mean",
+      "outcome": "PASS",
+      "error": null
+    },
+    {
+      "question": "Calculate the mean order value.",
+      "expected": "mean",
+      "actual": "mean",
+      "outcome": "PASS",
+      "error": null
+    },
+    {
+      "question": "How many orders are there and what is their average value?",
+      "expected": "count_and_mean",
+      "actual": "count_and_mean",
+      "outcome": "PASS",
+      "error": null
+    },
+    {
+      "question": "Create a customer-order dashboard.",
+      "expected": "dashboard",
+      "actual": "dashboard",
+      "outcome": "PASS",
+      "error": null
+    },
+    {
+      "question": "Calculate Pearson correlation between marketing cost and order value.",
+      "expected": "correlation_pearson",
+      "actual": "correlation_pearson",
+      "outcome": "PASS",
+      "error": null
+    },
+    {
+      "question": "Use Spearman to assess the relationship between order value and marketing cost.",
+      "expected": "correlation_spearman",
+      "actual": "correlation_spearman",
+      "outcome": "PASS",
+      "error": null
+    },
+    {
+      "question": "Calculate Kendall correlation between marketing cost and order value.",
+      "expected": "correlation_kendall",
+      "actual": "correlation_kendall",
+      "outcome": "PASS",
+      "error": null
+    },
+    {
+      "question": "Calculate correlation between marketing cost and order value.",
+      "expected": "unsupported",
+      "actual": "correlation_spearman",
+      "outcome": "WRONG",
+      "error": null
+    },
+    {
+      "question": "Calculate Pearson correlation between age and salary.",
+      "expected": "unsupported",
+      "actual": "correlation_pearson",
+      "outcome": "WRONG",
+      "error": null
+    },
+    {
+      "question": "Predict next month's sales.",
+      "expected": "unsupported",
+      "actual": null,
+      "outcome": "ERROR",
+      "error": "ValueError: Invalid supervisor classification."
+    }
+  ]
+}

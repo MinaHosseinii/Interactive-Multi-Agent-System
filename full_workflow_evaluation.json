@@ -1,0 +1,77 @@
+[
+  {
+    "question": "Calculate Spearman correlation between marketing cost and order value.",
+    "outcome": "PASS",
+    "visited_nodes": [
+      "supervisor",
+      "validate_request",
+      "correlation",
+      "correlation_report"
+    ],
+    "status": "completed",
+    "answer": "Spearman correlation between marketing cost and recorded order value is 0.4000, using 4 complete pairs. Excluded rows: 1. This describes association, not causation.",
+    "calculation": {
+      "method": "spearman",
+      "x_column": "marketing_cost_eur",
+      "y_column": "order_value_eur",
+      "pairs_used": 4,
+      "included_rows": [
+        1,
+        2,
+        4,
+        5
+      ],
+      "excluded_rows": [
+        {
+          "row": 3,
+          "reason": "missing_value",
+          "columns": [
+            "order_value_eur"
+          ]
+        }
+      ],
+      "ok": true,
+      "coefficient": 0.39999999999999997
+    },
+    "failures": []
+  },
+  {
+    "question": "Calculate correlation between marketing cost and order value.",
+    "outcome": "PASS",
+    "visited_nodes": [
+      "supervisor",
+      "validate_request",
+      "request_stopped"
+    ],
+    "status": "clarify",
+    "answer": "Which method: Pearson, Spearman, or Kendall?",
+    "calculation": {},
+    "failures": []
+  },
+  {
+    "question": "Calculate Pearson correlation between age and salary.",
+    "outcome": "PASS",
+    "visited_nodes": [
+      "supervisor",
+      "validate_request",
+      "request_stopped"
+    ],
+    "status": "unsupported",
+    "answer": "Supported columns are marketing_cost_eur and order_value_eur.",
+    "calculation": {},
+    "failures": []
+  },
+  {
+    "question": "Predict next month's sales.",
+    "outcome": "PASS",
+    "visited_nodes": [
+      "supervisor",
+      "validate_request",
+      "request_stopped"
+    ],
+    "status": "unsupported",
+    "answer": "This validator supports correlation only.",
+    "calculation": {},
+    "failures": []
+  }
+]

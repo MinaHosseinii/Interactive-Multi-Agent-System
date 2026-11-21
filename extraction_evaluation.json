@@ -1,0 +1,232 @@
+[
+  {
+    "case": {
+      "question": "Use Pearson to measure the relationship between order value and marketing cost.",
+      "operation": "correlation",
+      "method": "pearson",
+      "columns": [
+        "marketing_cost_eur",
+        "order_value_eur"
+      ],
+      "status": "ready"
+    },
+    "result": {
+      "request": {
+        "operation": "correlation",
+        "method": "pearson",
+        "columns": [
+          "order_value_eur",
+          "marketing_cost_eur"
+        ]
+      },
+      "validation": {
+        "status": "ready",
+        "method": "pearson",
+        "columns": [
+          "order_value_eur",
+          "marketing_cost_eur"
+        ]
+      }
+    },
+    "outcome": "PASS",
+    "errors": []
+  },
+  {
+    "case": {
+      "question": "Find the Spearman correlation of marketing cost and order value.",
+      "operation": "correlation",
+      "method": "spearman",
+      "columns": [
+        "marketing_cost_eur",
+        "order_value_eur"
+      ],
+      "status": "ready"
+    },
+    "result": {
+      "request": {
+        "operation": "correlation",
+        "method": "spearman",
+        "columns": [
+          "marketing_cost_eur",
+          "order_value_eur"
+        ]
+      },
+      "validation": {
+        "status": "ready",
+        "method": "spearman",
+        "columns": [
+          "marketing_cost_eur",
+          "order_value_eur"
+        ]
+      }
+    },
+    "outcome": "PASS",
+    "errors": []
+  },
+  {
+    "case": {
+      "question": "For marketing cost versus order value, calculate Kendall correlation.",
+      "operation": "correlation",
+      "method": "kendall",
+      "columns": [
+        "marketing_cost_eur",
+        "order_value_eur"
+      ],
+      "status": "ready"
+    },
+    "result": {
+      "request": {
+        "operation": "correlation",
+        "method": "kendall",
+        "columns": [
+          "marketing_cost_eur",
+          "order_value_eur"
+        ]
+      },
+      "validation": {
+        "status": "ready",
+        "method": "kendall",
+        "columns": [
+          "marketing_cost_eur",
+          "order_value_eur"
+        ]
+      }
+    },
+    "outcome": "PASS",
+    "errors": []
+  },
+  {
+    "case": {
+      "question": "Are marketing cost and order value correlated?",
+      "operation": "correlation",
+      "method": null,
+      "columns": [
+        "marketing_cost_eur",
+        "order_value_eur"
+      ],
+      "status": "clarify"
+    },
+    "result": {
+      "request": {
+        "operation": "correlation",
+        "method": null,
+        "columns": [
+          "marketing_cost_eur",
+          "order_value_eur"
+        ]
+      },
+      "validation": {
+        "status": "clarify",
+        "message": "Which method: Pearson, Spearman, or Kendall?"
+      }
+    },
+    "outcome": "PASS",
+    "errors": []
+  },
+  {
+    "case": {
+      "question": "Calculate correlation between order value and marketing cost.",
+      "operation": "correlation",
+      "method": null,
+      "columns": [
+        "marketing_cost_eur",
+        "order_value_eur"
+      ],
+      "status": "clarify"
+    },
+    "result": {
+      "request": {
+        "operation": "correlation",
+        "method": null,
+        "columns": [
+          "order_value_eur",
+          "marketing_cost_eur"
+        ]
+      },
+      "validation": {
+        "status": "clarify",
+        "message": "Which method: Pearson, Spearman, or Kendall?"
+      }
+    },
+    "outcome": "PASS",
+    "errors": []
+  },
+  {
+    "case": {
+      "question": "Use Pearson to calculate correlation between age and salary.",
+      "operation": "correlation",
+      "method": "pearson",
+      "columns": [
+        "age",
+        "salary"
+      ],
+      "status": "unsupported"
+    },
+    "result": {
+      "request": {
+        "operation": "correlation",
+        "method": "pearson",
+        "columns": [
+          "age",
+          "salary"
+        ]
+      },
+      "validation": {
+        "status": "unsupported",
+        "message": "Supported columns are marketing_cost_eur and order_value_eur."
+      }
+    },
+    "outcome": "PASS",
+    "errors": []
+  },
+  {
+    "case": {
+      "question": "Calculate Spearman correlation between marketing cost and salary.",
+      "operation": "correlation",
+      "method": "spearman",
+      "columns": [
+        "marketing_cost_eur",
+        "salary"
+      ],
+      "status": "unsupported"
+    },
+    "result": {
+      "request": {
+        "operation": "correlation",
+        "method": "spearman",
+        "columns": [
+          "marketing_cost_eur",
+          "salary"
+        ]
+      },
+      "validation": {
+        "status": "unsupported",
+        "message": "Supported columns are marketing_cost_eur and order_value_eur."
+      }
+    },
+    "outcome": "PASS",
+    "errors": []
+  },
+  {
+    "case": {
+      "question": "Predict next month's sales.",
+      "operation": "predict",
+      "method": null,
+      "columns": [],
+      "status": "unsupported"
+    },
+    "result": {
+      "request": {
+        "operation": "predict",
+        "method": null,
+        "columns": []
+      },
+      "validation": {
+        "status": "unsupported",
+        "message": "This validator supports correlation only."
+      }
+    },
+    "outcome": "PASS",
+    "errors": []
+  }
+]
