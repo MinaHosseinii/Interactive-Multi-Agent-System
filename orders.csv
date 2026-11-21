@@ -1,0 +1,124 @@
+order_id,line_id,order_date,quantity,line_value_eur,marketing_cost_eur,customer_type,sales_channel,product_sku,product_name
+ORD-1001,1,21.10.2026,2,139.80,8.19,new,online,P103,Keyboard
+ORD-1001,2,21.10.2026,4,996.00,69.72,new,online,P104,Desk
+ORD-1002,1,2026-10-21,1,49.00,13.45,returning,retail,P102,Monitor stand
+ORD-1002,2,2026-10-21,1,49.00,12.41,returning,retail,P102,Monitor stand
+ORD-1003,1,2026-10-22,3,147.00,7.35,returning,partner,P102,Monitor stand
+ORD-1003,2,2026-10-22,2,279.80,20.99,returning,partner,P100,Office chair
+ORD-1004,1,2026-10-22,2,279.80,25.59,new,online,P100,Office chair
+ORD-1004,2,2026-10-22,1,139.90,15.00,new,online,P100,Office chair
+ORD-1005,1,2026-10-23,2,98.00,13.90,returning,retail,P102,Monitor stand
+ORD-1005,2,2026-10-23,1,49.00,16.41,returning,retail,P102,Monitor stand
+ORD-1006,1,23.10.2026,2,139.80,9.79,returning,partner,P103,Keyboard
+ORD-1006,2,23.10.2026,2,498.00,34.86,returning,partner,P104,Desk
+ORD-1007,1,2026-10-24,1,139.90,14.59,new,online,P100,Office chair
+ORD-1007,2,2026-10-24,4,279.60,15.39,new,online,P103,Keyboard
+ORD-1008,1,2026-10-24,3,747.00,31.41,returning,retail,P104,Desk
+ORD-1008,2,2026-10-24,2,79.00,14.11,returning,retail,P101,Desk lamp
+ORD-1009,1,2026-10-25,2,139.80,19.58,returning,partner,P103,Keyboard
+ORD-1009,2,2026-10-25,4,158.00,9.74,returning,partner,P101,Desk lamp
+ORD-1010,1,2026-10-25,4,559.60,38.98,new,online,P100,Office chair
+ORD-1010,2,2026-10-25,4,996.00,53.80,new,online,P104,Desk
+ORD-1011,1,26.10.2026,1,249.00,32.41,returning,retail,P104,Desk
+ORD-1011,2,26.10.2026,4,996.00,93.64,returning,retail,P104,Desk
+ORD-1012,1,2026-10-26,4,279.60,29.16,returning,partner,P103,Keyboard
+ORD-1012,2,2026-10-26,3,747.00,58.29,returning,partner,P104,Desk
+ORD-1013,1,2026-10-27,2,498.00,30.90,new,online,P104,Desk
+ORD-1013,2,2026-10-27,3,147.00,4.41,new,online,P102,Monitor stand
+ORD-1014,1,2026-10-27,3,209.70,18.68,returning,retail,P103,Keyboard
+ORD-1014,2,2026-10-27,1,249.00,9.47,returning,retail,P104,Desk
+ORD-1015,1,2026-10-28,4,996.00,50.80,returning,partner,P104,Desk
+ORD-1015,2,2026-10-28,1,69.90,15.50,returning,partner,P103,Keyboard
+ORD-1016,1,28.10.2026,4,996.00,75.72,new,online,P104,Desk
+ORD-1016,2,28.10.2026,2,279.80,9.39,new,online,P100,Office chair
+ORD-1017,1,2026-10-29,1,69.90,14.29,returning,retail,P103,Keyboard
+ORD-1017,2,2026-10-29,4,158.00,22.22,returning,retail,P101,Desk lamp
+ORD-1018,1,2026-10-29,3,747.00,25.41,returning,partner,P104,Desk
+ORD-1018,2,2026-10-29,1,69.90,4.10,returning,partner,P103,Keyboard
+ORD-1019,1,2026-10-30,3,419.70,43.77,new,online,P100,Office chair
+ORD-1019,2,2026-10-30,1,249.00,14.47,new,online,P104,Desk
+ORD-1020,1,2026-10-30,2,498.00,20.94,returning,retail,P104,Desk
+ORD-1020,2,2026-10-30,1,39.50,3.56,returning,retail,P101,Desk lamp
+ORD-1021,1,31.10.2026,1,49.00,11.47,returning,partner,P102,Monitor stand
+ORD-1021,2,31.10.2026,3,209.70,26.68,returning,partner,P103,Keyboard
+ORD-1022,1,2026-10-31,3,419.70,35.38,new,online,P100,Office chair
+ORD-1022,2,2026-10-31,4,279.60,16.98,new,online,P103,Keyboard
+ORD-1023,1,2026-11-01,4,158.00,17.22,returning,retail,P101,Desk lamp
+ORD-1023,2,2026-11-01,1,69.90,7.50,returning,retail,P103,Keyboard
+ORD-1024,1,2026-11-01,3,118.50,16.92,returning,partner,P101,Desk lamp
+ORD-1024,2,2026-11-01,4,158.00,14.90,returning,partner,P101,Desk lamp
+ORD-1025,1,2026-11-02,2,498.00,38.86,new,online,P104,Desk
+ORD-1025,2,2026-11-02,2,139.80,16.19,new,online,P103,Keyboard
+ORD-1026,1,02.11.2026,1,69.90,10.50,returning,retail,P103,Keyboard
+ORD-1026,2,02.11.2026,2,139.80,15.99,returning,retail,P103,Keyboard
+ORD-1027,1,2026-11-03,2,98.00,14.90,returning,partner,P102,Monitor stand
+ORD-1027,2,2026-11-03,3,419.70,29.38,returning,partner,P100,Office chair
+ORD-1028,1,2026-11-03,4,279.60,34.16,new,online,P103,Keyboard
+ORD-1028,2,2026-11-03,2,498.00,18.94,new,online,P104,Desk
+ORD-1029,1,2026-11-04,2,139.80,19.58,returning,retail,P103,Keyboard
+ORD-1029,2,2026-11-04,1,249.00,26.41,returning,retail,P104,Desk
+ORD-1030,1,2026-11-04,1,49.00,14.45,returning,partner,P102,Monitor stand
+ORD-1030,2,2026-11-04,2,279.80,37.18,returning,partner,P100,Office chair
+ORD-1031,1,05.11.2026,4,196.00,22.64,new,online,P102,Monitor stand
+ORD-1031,2,05.11.2026,1,69.90,14.50,new,online,P103,Keyboard
+ORD-1032,1,2026-11-05,2,98.00,12.82,returning,retail,P102,Monitor stand
+ORD-1032,2,2026-11-05,4,158.00,26.22,returning,retail,P101,Desk lamp
+ORD-1033,1,2026-11-06,2,79.00,5.95,returning,partner,P101,Desk lamp
+ORD-1033,2,2026-11-06,4,158.00,22.22,returning,partner,P101,Desk lamp
+ORD-1034,1,2026-11-06,1,39.50,7.76,new,online,P101,Desk lamp
+ORD-1034,2,2026-11-06,4,996.00,80.72,new,online,P104,Desk
+ORD-1035,1,2026-11-07,3,747.00,48.35,returning,retail,P104,Desk
+ORD-1035,2,2026-11-07,3,147.00,23.23,returning,retail,P102,Monitor stand
+ORD-1036,1,07.11.2026,2,139.80,7.19,returning,partner,P103,Keyboard
+ORD-1036,2,07.11.2026,4,559.60,17.79,returning,partner,P100,Office chair
+ORD-1037,1,2026-11-08,3,147.00,15.35,new,online,P102,Monitor stand
+ORD-1037,2,2026-11-08,2,139.80,11.99,new,online,P103,Keyboard
+ORD-1038,1,2026-11-08,4,279.60,25.98,returning,retail,P103,Keyboard
+ORD-1038,2,2026-11-08,4,996.00,69.72,returning,retail,P104,Desk
+ORD-1039,1,2026-11-09,3,209.70,14.29,returning,partner,P103,Keyboard
+ORD-1039,2,2026-11-09,2,139.80,9.99,returning,partner,P103,Keyboard
+ORD-1040,1,2026-11-09,4,196.00,9.80,new,online,P102,Monitor stand
+ORD-1040,2,2026-11-09,2,98.00,6.94,new,online,P102,Monitor stand
+ORD-1041,1,10.11.2026,3,118.50,10.92,returning,retail,P101,Desk lamp
+ORD-1041,2,10.11.2026,2,98.00,17.86,returning,retail,P102,Monitor stand
+ORD-1042,1,2026-11-10,3,747.00,29.41,returning,partner,P104,Desk
+ORD-1042,2,2026-11-10,4,158.00,16.74,returning,partner,P101,Desk lamp
+ORD-1043,1,2026-11-11,4,559.60,20.79,new,online,P100,Office chair
+ORD-1043,2,2026-11-11,2,139.80,17.79,new,online,P103,Keyboard
+ORD-1044,1,2026-11-11,3,209.70,17.48,returning,retail,P103,Keyboard
+ORD-1044,2,2026-11-11,4,196.00,17.72,returning,retail,P102,Monitor stand
+ORD-1045,1,2026-11-12,4,196.00,18.64,returning,partner,P102,Monitor stand
+ORD-1045,2,2026-11-12,1,139.90,8.00,returning,partner,P100,Office chair
+ORD-1046,1,12.11.2026,1,69.90,14.29,new,online,P103,Keyboard
+ORD-1046,2,12.11.2026,1,39.50,8.76,new,online,P101,Desk lamp
+ORD-1047,1,2026-11-13,1,49.00,11.47,returning,retail,P102,Monitor stand
+ORD-1047,2,2026-11-13,3,209.70,20.87,returning,retail,P103,Keyboard
+ORD-1048,1,2026-11-13,1,39.50,1.98,returning,partner,P101,Desk lamp
+ORD-1048,2,2026-11-13,2,79.00,7.37,returning,partner,P101,Desk lamp
+ORD-1049,1,2026-11-14,3,419.70,37.77,new,online,P100,Office chair
+ORD-1049,2,2026-11-14,2,79.00,13.11,new,online,P101,Desk lamp
+ORD-1050,1,2026-11-14,4,196.00,20.72,returning,retail,P102,Monitor stand
+ORD-1050,2,2026-11-14,4,279.60,28.57,returning,retail,P103,Keyboard
+ORD-1051,1,15.11.2026,2,139.80,11.99,returning,partner,P103,Keyboard
+ORD-1051,2,15.11.2026,2,139.80,14.79,returning,partner,P103,Keyboard
+ORD-1052,1,2026-11-15,4,158.00,9.90,new,online,P101,Desk lamp
+ORD-1052,2,2026-11-15,4,158.00,19.22,new,online,P101,Desk lamp
+ORD-1053,1,2026-11-16,3,209.70,13.48,returning,retail,P103,Keyboard
+ORD-1053,2,2026-11-16,2,98.00,8.82,returning,retail,P102,Monitor stand
+ORD-1054,1,2026-11-16,2,98.00,20.82,returning,partner,P102,Monitor stand
+ORD-1054,2,2026-11-16,4,279.60,10.39,returning,partner,P103,Keyboard
+ORD-1055,1,2026-11-17,2,79.00,11.53,new,online,P101,Desk lamp
+ORD-1055,2,2026-11-17,2,79.00,5.95,new,online,P101,Desk lamp
+ORD-1056,1,17.11.2026,3,147.00,19.29,returning,retail,P102,Monitor stand
+ORD-1056,2,17.11.2026,4,996.00,71.72,returning,retail,P104,Desk
+ORD-1057,1,2026-11-18,3,118.50,10.92,returning,partner,P101,Desk lamp
+ORD-1057,2,2026-11-18,3,209.70,30.87,returning,partner,P103,Keyboard
+ORD-1058,1,2026-11-18,1,39.50,9.98,new,online,P101,Desk lamp
+ORD-1058,2,2026-11-18,4,158.00,20.06,new,online,P101,Desk lamp
+ORD-1059,1,2026-11-19,40,9960.00,501.00,returning,retail,P104,Desk
+ORD-1059,2,2026-11-19,4,196.00,13.88,returning,retail,P102,Monitor stand
+ORD-1060,1,2026-11-19,4,279.60,27.16,returning,partner,P103,Keyboard
+ORD-1060,2,2026-11-19,3,419.70,18.59,returning,partner,P100,Office chair
+ORD-1005,1,2026-10-23,2,98.00,13.90,returning,retail,P102,Monitor stand
+ORD-1021,2,31.10.2026,3,209.70,26.68,returning,partner,P103,Keyboard
+ORD-1046,1,12.11.2026,1,69.90,14.29,new,online,P103,Keyboard
